@@ -78,7 +78,9 @@ python app.py
 - **Dataset**: Kaggle Skin Diseases Image Dataset (10 classes)
 - **Accuracy**: 80.64% validation accuracy
 - **Classes**: Eczema, Melanoma, Atopic Dermatitis, BCC, Melanocytic Nevi, BKL, Psoriasis, Seborrheic Keratoses, Tinea Ringworm, Warts
-
+## Model Weights
+Download the trained model from [Google Drive](https://drive.google.com/file/d/1IP7YQilO6QKjNbyXS5Iw5GRg82ahNOJw/view?usp=sharing) and place it at:
+`model/efficientnet_skin.pth
 ## Docker
 ```bash
 docker build -t skin-disease-api .
