@@ -1,0 +1,8 @@
+model/*.pth
+__pycache__/
+*.pyc
+.conda/
+*.egg-info/
+.env
+venv/
+.cache/
