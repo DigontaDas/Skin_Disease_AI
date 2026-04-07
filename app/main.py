@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 import io
 
-from model import load_model, predict
+from ai_model import load_model, predict
 from llm import get_recommendations
 from preprocess import preprocess_image
 

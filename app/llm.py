@@ -1,12 +1,14 @@
 import os
 import json
 import requests
+from dotenv import load_dotenv
+load_dotenv()
 
-
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "AIzaSyCVzkKX4ga_affjJHAoQWVw8rCJ1_jO7tc")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 GEMINI_URL     = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"
 
-
+if not GEMINI_API_KEY:
+    raise ValueError("GEMINI_API_KEY not set in environment variables")
 def build_prompt(disease: str, confidence: float) -> str:
     conf_pct = round(confidence * 100, 1)
 
