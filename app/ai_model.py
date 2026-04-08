@@ -2,6 +2,8 @@ import torch
 import torch.nn as nn
 from torchvision import models
 import json, os
+import gdown
+import re
 
 BASE_DIR    = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MODEL_PATH  = os.path.join(BASE_DIR, "model", "resnet50_skin.pth")
@@ -15,6 +17,12 @@ def build_model(num_classes):
     return m
 
 def load_model():
+    if not os.path.exists(MODEL_PATH):
+        os.makedirs(os.path.dirname(MODEL_PATH), exist_ok=True)
+        print("Downloading model from Google Drive...")
+        gdown.download("https://drive.google.com/uc?id=1mwXX_evABlYmgFwXDGOmBSf0JqHl5l4S", MODEL_PATH, quiet=False)
+
+
     with open(LABELS_PATH) as f: class_names = json.load(f)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     ckpt = torch.load(MODEL_PATH, map_location=device)
@@ -28,7 +36,11 @@ def predict(tensor, model, class_names, device):
     with torch.no_grad():
         probs = torch.softmax(model(tensor.to(device)), dim=1)[0]
         top5  = torch.topk(probs, k=min(5, len(class_names)))
-    return (class_names[top5.indices[0].item()],
-            top5.values[0].item(),
-            [{"disease": class_names[top5.indices[i].item()],
-              "confidence": round(top5.values[i].item(), 4)} for i in range(top5.indices.shape[0])])
+    def clean_label(raw):
+        name = raw.split(". ", 1)[-1] if ". " in raw else raw
+        return re.sub(r'\s*[-–]?\s*[\d.]+k?\s*$', '', name).strip()
+
+    return (clean_label(class_names[top5.indices[0].item()]),
+        top5.values[0].item(),
+        [{"disease": clean_label(class_names[top5.indices[i].item()]),
+          "confidence": round(top5.values[i].item(), 4)} for i in range(top5.indices.shape[0])])

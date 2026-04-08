@@ -9,6 +9,6 @@ COPY app/ ./app/
 COPY model/ ./model/
 COPY ui/ ./ui/
 
-EXPOSE 8000
+EXPOSE 7860
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "7860"]
