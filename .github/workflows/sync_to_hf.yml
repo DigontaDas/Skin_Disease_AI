@@ -15,9 +15,11 @@ jobs:
         with:
           python-version: '3.10'
           
-      - name: Install and Deploy
+      - name: Install Hugging Face Hub
+        run: pip install huggingface_hub
+        
+      - name: Deploy to Hugging Face via Python API
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          pip install -U "huggingface_hub[cli]"
-          huggingface-cli upload Digonta2002/skin-disease-detector . . --repo-type space --token $HF_TOKEN
+          python -c "from huggingface_hub import HfApi; import os; HfApi().upload_folder(folder_path='.', repo_id='Digonta2002/skin-disease-detector', repo_type='space', token=os.environ['HF_TOKEN'], ignore_patterns=['.git/*'])"
