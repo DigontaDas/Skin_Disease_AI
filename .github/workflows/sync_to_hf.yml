@@ -15,11 +15,9 @@ jobs:
         with:
           python-version: '3.10'
           
-      - name: Install Hugging Face CLI
-        run: pip install -U "huggingface_hub[cli]"
-        
-      - name: Deploy to Hugging Face
+      - name: Install and Deploy
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          huggingface-cli upload Digonta2002/skin-disease-detector . . --repo-type space --token $HF_TOKEN
+          pip install -U "huggingface_hub[cli]"
+          python -m huggingface_hub.cli upload Digonta2002/skin-disease-detector . . --repo-type space --token $HF_TOKEN
