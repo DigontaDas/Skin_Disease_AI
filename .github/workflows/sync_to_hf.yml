@@ -9,11 +9,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          lfs: true
-      - name: Push to hub
+      
+      - name: Install Hugging Face Hub
+        run: pip install huggingface_hub
+        
+      - name: Deploy to Hugging Face
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          git push --force https://Digonta2002:$HF_TOKEN@huggingface.co/spaces/Digonta2002/skin-disease-detector main
+          huggingface-cli upload Digonta2002/skin-disease-detector . . --repo-type space --token $HF_TOKEN
