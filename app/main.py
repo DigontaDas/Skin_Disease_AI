@@ -2,14 +2,11 @@ from fastapi import FastAPI, HTTPException, File, UploadFile
 import gradio as gr
 import io
 import traceback
-import gradio as gr
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from ui.app import demo
-from ai_model import load_model, predict
-from llm import get_recommendations
-from preprocess import preprocess_image
+
+# 1. FIXED IMPORTS: Explicitly tell Docker to look inside the 'app' folder
+from app.ai_model import load_model, predict
+from app.llm import get_recommendations
+from app.preprocess import preprocess_image
 
 app = FastAPI(
     title="Skin Disease Detection API",
@@ -17,9 +14,10 @@ app = FastAPI(
     version="1.0.0"
 )
 
+# Load model on startup
 model, class_names, device = load_model()
 
-@app.get("/")
+@app.get("/health")
 def api_root():
     return {"message": "Skin Disease Detection API is running ✅"}
 
@@ -50,13 +48,16 @@ async def api_analyze_skin(file: UploadFile = File(...)):
 def gradio_predict(image):
     if image is None:
         return "Please upload an image.", "", "", "", ""
+    
     img_bytes = io.BytesIO()
     image.save(img_bytes, format="JPEG")
     img_bytes.seek(0)
+    
     try:
         image_tensor = preprocess_image(img_bytes.getvalue())
         disease, confidence, top5 = predict(image_tensor, model, class_names, device)
         recommendations = get_recommendations(disease, confidence)
+        
         top5_text = "\n".join(
             [f"{i+1}. {p['disease']}  —  {p['confidence']*100:.2f}%"
              for i, p in enumerate(top5)]
@@ -70,27 +71,33 @@ def gradio_predict(image):
     except Exception as e:
         return f"Error: {e}", "", "", "", "", ""
 
+
+# Gradio UI Definition
 with gr.Blocks(title="Skin Disease Detector") as demo:
     gr.Markdown("# 🩺 Skin Disease Detection & LLM Advisor")
     gr.Markdown("Upload a skin image to get AI-powered disease detection and recommendations.")
+    
     with gr.Row():
         image_input = gr.Image(type="pil", label="Upload Skin Image")
         with gr.Column():
             disease_out    = gr.Textbox(label="Detected Disease")
             confidence_out = gr.Textbox(label="Confidence")
             top5_out       = gr.Textbox(label="Top 5 Predictions", lines=5)
+            
     with gr.Row():
         recs_out  = gr.Textbox(label="Recommendations", lines=3)
         steps_out = gr.Textbox(label="Next Steps", lines=3)
         tips_out  = gr.Textbox(label="Daily Care Tips", lines=3)
+        
     analyze_btn = gr.Button("🔍 Analyze", variant="primary")
+    
     analyze_btn.click(
         fn=gradio_predict,
         inputs=[image_input],
         outputs=[disease_out, confidence_out, top5_out, recs_out, steps_out, tips_out]
     )
 
-app = gr.mount_gradio_app(app, demo, path="/ui")
+app = gr.mount_gradio_app(app, demo, path="/")
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=7860)
