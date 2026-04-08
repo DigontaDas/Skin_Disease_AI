@@ -89,6 +89,7 @@ python app.py
 - **Classes**: Eczema, Melanoma, Atopic Dermatitis, BCC, Melanocytic Nevi, BKL, Psoriasis, Seborrheic Keratoses, Tinea Ringworm, Warts
 ## Model Weights
 Download the trained model from [Google Drive](https://drive.google.com/file/d/1mwXX_evABlYmgFwXDGOmBSf0JqHl5l4S/view?usp=sharing) and place it at:
+
 `model/resnet50_skin.pth`
 ## Docker
 ```bash

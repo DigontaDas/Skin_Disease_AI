@@ -1,7 +1,7 @@
 import gradio as gr
 import requests
 
-API_URL = "http://127.0.0.1:8000/analyze_skin"
+API_URL = "http://127.0.0.1:7860/analyze_skin"
 
 def analyze_skin(image):
     if image is None:

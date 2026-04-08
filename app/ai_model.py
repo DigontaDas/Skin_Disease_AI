@@ -5,6 +5,7 @@ import json, os
 import gdown
 import re
 
+
 BASE_DIR    = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MODEL_PATH  = os.path.join(BASE_DIR, "model", "resnet50_skin.pth")
 LABELS_PATH = os.path.join(BASE_DIR, "model", "class_labels.json")
@@ -36,6 +37,7 @@ def predict(tensor, model, class_names, device):
     with torch.no_grad():
         probs = torch.softmax(model(tensor.to(device)), dim=1)[0]
         top5  = torch.topk(probs, k=min(5, len(class_names)))
+
     def clean_label(raw):
         name = raw.split(". ", 1)[-1] if ". " in raw else raw
         return re.sub(r'\s*[-–]?\s*[\d.]+k?\s*$', '', name).strip()
@@ -44,3 +46,4 @@ def predict(tensor, model, class_names, device):
         top5.values[0].item(),
         [{"disease": clean_label(class_names[top5.indices[i].item()]),
           "confidence": round(top5.values[i].item(), 4)} for i in range(top5.indices.shape[0])])
+
