@@ -2,16 +2,11 @@ from fastapi import FastAPI, HTTPException, File, UploadFile
 import gradio as gr
 import io
 import traceback
-
-<<<<<<< HEAD
-=======
 import gradio as gr
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from ui.app import demo
-
->>>>>>> temp-fix
 from ai_model import load_model, predict
 from llm import get_recommendations
 from preprocess import preprocess_image
@@ -52,7 +47,6 @@ async def api_analyze_skin(file: UploadFile = File(...)):
         print(traceback.format_exc())
         raise HTTPException(status_code=500, detail=str(e))
 
-<<<<<<< HEAD
 def gradio_predict(image):
     if image is None:
         return "Please upload an image.", "", "", "", ""
@@ -97,10 +91,6 @@ with gr.Blocks(title="Skin Disease Detector") as demo:
     )
 
 app = gr.mount_gradio_app(app, demo, path="/ui")
-
-=======
-app = gr.mount_gradio_app(app, demo, path="/")
->>>>>>> temp-fix
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=7860)
