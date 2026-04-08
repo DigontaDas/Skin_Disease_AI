@@ -95,6 +95,7 @@ with gr.Blocks(title="Skin Disease Detector") as demo:
     analyze_btn.click(
         fn=gradio_predict,
         inputs=[image_input],
+        api_name=False,
         outputs=[disease_out, confidence_out, top5_out, recs_out, steps_out, tips_out]
     )
 
