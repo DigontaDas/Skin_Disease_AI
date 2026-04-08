@@ -3,11 +3,11 @@ import gradio as gr
 import io
 import traceback
 
-# 1. FIXED IMPORTS: Explicitly tell Docker to look inside the 'app' folder
 from app.ai_model import load_model, predict
 from app.llm import get_recommendations
 from app.preprocess import preprocess_image
 
+# Initialize FastAPI
 app = FastAPI(
     title="Skin Disease Detection API",
     description="CNN + LLM powered skin disease detection",
@@ -17,8 +17,9 @@ app = FastAPI(
 # Load model on startup
 model, class_names, device = load_model()
 
+# --- FASTAPI ENDPOINTS ---
 @app.get("/health")
-def api_root():
+def api_health():
     return {"message": "Skin Disease Detection API is running ✅"}
 
 @app.get("/classes")
@@ -45,9 +46,10 @@ async def api_analyze_skin(file: UploadFile = File(...)):
         print(traceback.format_exc())
         raise HTTPException(status_code=500, detail=str(e))
 
+# --- GRADIO UI ---
 def gradio_predict(image):
     if image is None:
-        return "Please upload an image.", "", "", "", ""
+        return "Please upload an image.", "", "", "", "", ""
     
     img_bytes = io.BytesIO()
     image.save(img_bytes, format="JPEG")
@@ -71,8 +73,6 @@ def gradio_predict(image):
     except Exception as e:
         return f"Error: {e}", "", "", "", "", ""
 
-
-# Gradio UI Definition
 with gr.Blocks(title="Skin Disease Detector") as demo:
     gr.Markdown("# 🩺 Skin Disease Detection & LLM Advisor")
     gr.Markdown("Upload a skin image to get AI-powered disease detection and recommendations.")
@@ -97,7 +97,9 @@ with gr.Blocks(title="Skin Disease Detector") as demo:
         outputs=[disease_out, confidence_out, top5_out, recs_out, steps_out, tips_out]
     )
 
-app = gr.mount_gradio_app(app, demo, path="/ui")
+
+app = gr.mount_gradio_app(app, demo.queue(), path="/")
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=7860)
