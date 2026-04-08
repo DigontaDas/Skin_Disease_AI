@@ -18,6 +18,7 @@ app = FastAPI(
 model, class_names, device = load_model()
 
 # --- FASTAPI ENDPOINTS ---
+
 @app.get("/health")
 def api_health():
     return {"message": "Skin Disease Detection API is running ✅"}
@@ -96,7 +97,6 @@ with gr.Blocks(title="Skin Disease Detector") as demo:
         inputs=[image_input],
         outputs=[disease_out, confidence_out, top5_out, recs_out, steps_out, tips_out]
     )
-
 
 app = gr.mount_gradio_app(app, demo.queue(), path="/")
 
