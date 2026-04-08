@@ -3,7 +3,13 @@ from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 import io
 
-from model import load_model, predict
+import gradio as gr
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from ui.app import demo
+
+from ai_model import load_model, predict
 from llm import get_recommendations
 from preprocess import preprocess_image
 
@@ -65,6 +71,6 @@ async def analyze_skin(file: UploadFile = File(...)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-
+app = gr.mount_gradio_app(app, demo, path="/")
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)

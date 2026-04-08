@@ -1,17 +1,26 @@
 # 🩺 Skin Disease Detection & LLM Advisor System
 
-AI-powered skin disease detection using EfficientNet-B0 + Gemini Flash LLM recommendations.
+**Objective:** A real-time AI-powered system that analyzes skin images, detects diseases accurately using a pre-trained CNN, and provides meaningful recommendations using an LLM.
+
+**Problem Statement:** Users can upload skin images. The system classifies diseases, generates explanations using an LLM (Gemini Flash), and provides real-time API responses.
+
+## Technical Stack
+- **Backend:** Python, FastAPI
+- **Frontend:** Gradio
+- **AI/ML:** PyTorch, ResNet50 (Transfer learning)
+- **LLM:** Google Gemini Flash
+- **Deployment:** Docker
 
 ## Project Structure
 ```
 skin-disease-ai/
 ├── app/
 │   ├── main.py          # FastAPI app
-│   ├── model.py         # CNN inference
+│   ├── ai_model.py      # CNN inference
 │   ├── llm.py           # LLM recommendations (Gemini Flash)
 │   └── preprocess.py    # Image preprocessing
 ├── model/
-│   ├── efficientnet_skin.pth   # Trained model weights
+│   ├── resnet50_skin.pth   # Trained model weights
 │   └── class_labels.json       # Class names
 ├── ui/
 │   └── app.py           # Gradio UI
@@ -74,13 +83,13 @@ python app.py
 ```
 
 ## Model Info
-- **Architecture**: EfficientNet-B0 (Transfer Learning)
+- **Architecture**: ResNet50 (Transfer Learning)
 - **Dataset**: Kaggle Skin Diseases Image Dataset (10 classes)
 - **Accuracy**: 80.64% validation accuracy
 - **Classes**: Eczema, Melanoma, Atopic Dermatitis, BCC, Melanocytic Nevi, BKL, Psoriasis, Seborrheic Keratoses, Tinea Ringworm, Warts
 ## Model Weights
 Download the trained model from [Google Drive](https://drive.google.com/file/d/1IP7YQilO6QKjNbyXS5Iw5GRg82ahNOJw/view?usp=sharing) and place it at:
-`model/efficientnet_skin.pth
+`model/resnet50_skin.pth`
 ## Docker
 ```bash
 docker build -t skin-disease-api .
