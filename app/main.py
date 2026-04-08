@@ -97,7 +97,7 @@ with gr.Blocks(title="Skin Disease Detector") as demo:
         outputs=[disease_out, confidence_out, top5_out, recs_out, steps_out, tips_out]
     )
 
-app = gr.mount_gradio_app(app, demo, path="/")
+app = gr.mount_gradio_app(app, demo, path="/ui")
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=7860)
