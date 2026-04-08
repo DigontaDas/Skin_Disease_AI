@@ -20,4 +20,4 @@ jobs:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
           pip install -U "huggingface_hub[cli]"
-          python -m huggingface_hub.cli upload Digonta2002/skin-disease-detector . . --repo-type space --token $HF_TOKEN
+          huggingface-cli upload Digonta2002/skin-disease-detector . . --repo-type space --token $HF_TOKEN
