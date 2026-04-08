@@ -1,5 +1,13 @@
 # 🩺 Skin Disease Detection & LLM Advisor System
-
+---
+title: Skin Disease Detector
+emoji: 🩺
+colorFrom: blue
+colorTo: green
+sdk: docker
+pinned: false
+app_port: 7860
+---
 **Objective:** A real-time AI-powered system that analyzes skin images, detects diseases accurately using a pre-trained CNN, and provides meaningful recommendations using an LLM.
 
 **Problem Statement:** Users can upload skin images. The system classifies diseases, generates explanations using an LLM (Gemini Flash), and provides real-time API responses.
